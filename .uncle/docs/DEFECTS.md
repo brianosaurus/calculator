@@ -1,3 +1,0 @@
-# Defects
-
-No defects found.
