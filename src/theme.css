@@ -37,6 +37,30 @@ body {
   body { animation: none; background-position: 0 0, 0 0; }
 }
 
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: min(92vw, 360px);
+  padding: 16px 0;
+}
+
+.title {
+  margin: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  text-align: center;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 12vw, 4rem);
+  color: var(--gold);
+  text-shadow:
+    -2px -2px 0 var(--brown), 2px -2px 0 var(--brown),
+    -2px 2px 0 var(--brown), 2px 2px 0 var(--brown),
+    0 0 18px var(--orange);
+}
+
 .calculator {
   width: min(92vw, 360px);
   padding: 16px;
