@@ -49,7 +49,7 @@ body {
 .title {
   margin: 0;
   max-width: 100%;
-  white-space: nowrap;
+  white-space: normal;
   text-align: center;
   font-family: var(--font);
   font-weight: 700;
