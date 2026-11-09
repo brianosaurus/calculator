@@ -97,6 +97,64 @@ test('T-9e theme.css has no url( or @import', async () => {
   expect(css).not.toMatch(/url\(|@import/);
 });
 
+const centerX = (b) => b.x + b.width / 2;
+
+test('T-10 heading Groovy visible and centered above calculator (AC-1, AC-2)', async ({ page }) => {
+  for (const vp of [null, { width: 320, height: 640 }]) {
+    if (vp) await page.setViewportSize(vp);
+    await page.goto('/');
+    await expect(page.getByTestId('display')).toHaveText('0');
+    const h = page.getByRole('heading', { level: 1, name: 'Groovy' });
+    await expect(h).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
+    const hb = await h.boundingBox();
+    const cb = await page.locator('.calculator').boundingBox();
+    expect(Math.abs(centerX(hb) - centerX(cb))).toBeLessThanOrEqual(2);
+    expect(hb.y + hb.height).toBeLessThanOrEqual(cb.y + 1);
+  }
+});
+
+test('T-10b title styling (AC-3)', async ({ page }) => {
+  await page.goto('/');
+  const r = await page.evaluate(() => {
+    const t = getComputedStyle(document.querySelector('h1'));
+    const c = getComputedStyle(document.querySelector('.calculator'));
+    return { color: t.color, shadow: t.textShadow, font: t.fontFamily, size: parseFloat(t.fontSize), cfont: c.fontFamily };
+  });
+  expect(r.color).toBe(rgb('#E1AD01'));
+  expect(r.color).not.toBe(rgb('#3B2314'));
+  expect(r.shadow).toContain(rgb('#3B2314'));
+  expect(r.font).toBe(r.cfont);
+  expect(r.size).toBeGreaterThanOrEqual(40);
+  expect(r.size).toBeLessThanOrEqual(64);
+});
+
+test('T-10c no horizontal overflow at 320px (AC-4)', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Groovy' })).toBeVisible();
+  const r = await page.evaluate(() => ({
+    sw: document.documentElement.scrollWidth,
+    cw: document.documentElement.clientWidth,
+    title: document.querySelector('h1').getBoundingClientRect().width,
+    app: document.querySelector('.app').getBoundingClientRect().width,
+  }));
+  expect(r.sw).toBeLessThanOrEqual(r.cw);
+  expect(r.title).toBeLessThanOrEqual(r.app + 0.5);
+});
+
+test('T-10d short viewport scrolls, nothing clipped (AC-4)', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 300 });
+  await page.goto('/');
+  const h = page.getByRole('heading', { name: 'Groovy' });
+  await expect(h).toBeVisible();
+  expect((await h.boundingBox()).y).toBeGreaterThanOrEqual(0);
+  const calc = page.locator('.calculator');
+  await calc.evaluate((el) => el.scrollIntoView({ block: 'end' }));
+  const b = await calc.boundingBox();
+  expect(b.y + b.height).toBeLessThanOrEqual(300 + 1);
+});
+
 test('T-9f loop is seamless: end keyframe shifts each layer by whole tiles', async ({ page }) => {
   await page.goto('/');
   const r = await page.evaluate(() => {

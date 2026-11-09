@@ -4,133 +4,165 @@
 
 ### MC-101
 
-- **Action:** Loaded http://127.0.0.1:5173 in headless Chromium (reducedMotion no-preference) via temporary script .uncle/tests/mc101.cjs; sampled document.getAnimations() and screenshots every 5s for ~31s (past one 20s loop); inspected computed body styles and src/theme.css keyframes.
-- **Expected result:** Groovy 70s background of concentric rings and conic swirl in orange, gold, brown, green, cream moves continuously and smoothly, with no visible jump or seam at loop restart.
-- **Actual result:** Body has animation 'groovy' (20s linear infinite, running) over repeating-radial-gradient plus conic-gradient layers. currentTime advanced steadily (33, 5250, 10516, 15716, 20949, 26149, 31349 ms) and wrapped past 20000 while still running. Screenshots at successive times differ (motion present) and show concentric rings and swirl in orange/gold/green with brown calculator and cream display. Keyframes move background-position 0 0 -> 200% 200% / -200% -200% with background-size 200% 200%, which shifts exactly one tile width (2 viewports) per loop, so the loop is seamless by construction. Limitation: headless run, no continuous video; smoothness judged from linear timing and sampled frames, not a human viewing.
+- **Action:** Loaded http://127.0.0.1:5173 in headless Chromium at 1280x800, printed the DOM, read computed styles and bounding boxes of the heading, and took a screenshot.
+- **Expected result:** A heading reading exactly "Groovy" above the calculator card, horizontally centered over it, bold rounded retro font in gold with dark outline and orange glow.
+- **Actual result:** DOM has <h1 class="title">Groovy</h1> immediately before .calculator. Heading center x=640, card center x=640. Heading bottom y=214.5, card top y=230.5, so it sits above the card. font-weight 700, font-family Fredoka, "Baloo 2", Comfortaa, "Trebuchet MS", sans-serif. color rgb(225,173,1) (gold). text-shadow has four 2px dark brown rgb(59,35,20) offsets (outline) plus rgb(204,85,0) 18px blur (orange glow). In the screenshot the heading looks bold and rounded, gold with a dark outline and a glow. The rendered font may be a fallback if Fredoka is not installed.
 - **Defects:** None
 
 ### MC-102
 
-- **Action:** Loaded http://127.0.0.1:5173 in headless Chromium (Playwright), then without reloading emulated prefers-reduced-motion: reduce and back to no-preference, sampling body computed animation-name and background-position over 1s each.
-- **Expected result:** With reduce on, the background stops and shows a static gradient. With reduce off, the motion resumes without a reload.
-- **Actual result:** Baseline: animation 'groovy', background-position advanced (2.17% -> 12.5% in 1s). Reduce: animation-name 'none', background-position 0px 0px, 0px 0px unchanged after 1s (static gradient). Back to no-preference: animation 'groovy' again, position advanced 0% -> 10.33% in 1s, no reload.
+- **Action:** Took screenshots of the same page at about 0s, 5s and 10s while the background animated, and viewed all three.
+- **Expected result:** Groovy title readable against the background in all three screenshots; background animation and calculator centering look unchanged.
+- **Actual result:** The background visibly changed between the three shots (concentric rings, then a different ring phase, then a diamond/warped pattern), so the animation is running. The gold title with its dark outline and glow stayed legible in all three. The calculator card stayed centered at the same position (x 460-820, y 231-660) in every shot. The elapsed time of about 10s is an approximation of the full cycle, since the cycle length was not measured.
 - **Defects:** None
 
 ### MC-103
 
-- **Action:** Loaded http://127.0.0.1:5173/ in headless Chromium (Playwright, normal motion), inspected DOM and computed styles, clicked 1,2,+,3,= then C then 9,*,8,= and took a screenshot (/tmp/mc103.png).
-- **Expected result:** Calculator stays on an opaque brown background, animation never shows through; display and key text readable, key colors and layout unchanged; calculations correct.
-- **Actual result:** Computed .calculator background-color rgb(59,35,20), opacity 1, no backdrop-filter, no background-image. Display is cream rgb(255,241,208) with dark brown text; keys keep orange/gold/cream/green colors with readable text. Animated ring background is visible only outside the calculator panel in the screenshot. 12+3= displayed 15; 9*8= displayed 72.
+- **Action:** Loaded http://127.0.0.1:5173 in Playwright Chromium at 320x640, measured .title and .calculator rects, then attempted horizontal scroll to x=1000.
+- **Expected result:** The title stays on a single line, is no wider than the card, stays centered over it, and there is no horizontal scrollbar or clipping.
+- **Actual result:** Title white-space nowrap, height 47px at 40px font (single line), width 131.7px vs card 294.4px; title center x=159.99 vs card center x=159.99; scrollWidth 320 = clientWidth 320; scrollX stayed 0 after scrollTo(1000,0); title spans 94-226px, within the viewport.
 - **Defects:** None
 
-### MC-200
+### MC-104
 
-- **Action:** Opened http://127.0.0.1:5173 in headless Chromium with normal motion (reducedMotion=no-preference); clicked keys for 12+7=, C, 9*8=, then typed 5+3 + Enter and Escape via keyboard; read display and key layout.
-- **Expected result:** Calculator arithmetic, display output and key layout behave exactly as before; no logic regressions.
-- **Actual result:** 12+7= displayed 19; C reset to 0; 9*8= displayed 72; keyboard 5+3 Enter displayed 8; Escape reset to 0. Key layout order: C, ⌫, /, *, 7, 8, 9, -, 4, 5, 6, +, 1, 2, 3, =, 0, . (18 keys).
+- **Action:** Set viewport to 1280x300 in the same browser session, scrolled to top and then to the bottom, measuring title and key rects.
+- **Expected result:** The title is not clipped at the top, and scrolling vertically reveals the whole calculator including the bottom row of keys.
+- **Actual result:** At scroll top the title spans y=16 to 90 (fully visible, not clipped). Page scrollHeight is 551 vs a 300px viewport, so it scrolls; at the bottom (scrollY=251) all 18 keys are laid out and the lowest key bottom is 268, within the 300px viewport.
+- **Defects:** None
+
+### MC-105
+
+- **Action:** In Playwright at 1280x800 against http://127.0.0.1:5173, clicked 12 + 7 =, cleared, typed 8*3 + Enter on keyboard, cleared, entered 15 digits and read display font size and h1 title.
+- **Expected result:** Results 19 and 24, display updates, font shrinks for long input, title unchanged.
+- **Actual result:** Display showed 19 and 24. After 15 digits, display showed 123456789012 (12-digit cap) and font-size shrank from 2.6rem to 1.6rem. Title h1.title was 'Groovy' before and after.
+- **Defects:** None
+
+### MC-201
+
+- **Action:** At 1280x800, clicked 12 + 7 =, C, 9 * 3 =, C, then typed 5*4 + Enter on keyboard.
+- **Expected result:** Display 19, then 27, then cleared; keyboard yields 20.
+- **Actual result:** Display showed 19, then 0 after clear, 27 and then 0 after clear, then 20 from keyboard entry. The multiply key is labelled '*' rather than 'x'.
 - **Defects:** None
 
 ### MC-202
 
-- **Action:** Loaded http://127.0.0.1:5173 in headless Chromium (Playwright script .uncle/tests/mc202.cjs) instead of a visible devtools panel, reloaded, waited 3s while the background animated, and recorded all network requests and console/page errors.
-- **Expected result:** Only same-origin localhost requests appear; no external fonts, images or CDN requests, and no console errors.
-- **Actual result:** All 28 recorded requests (initial load plus reload) were to http://127.0.0.1:5173 (index, vite client, main.jsx, Calculator.jsx, theme.css, engine.js, keymap.js, and react deps). No external hosts. Zero console errors or page errors.
+- **Action:** Loaded http://127.0.0.1:5173 at 1280x800 in Playwright, clicked digit keys 1-9,1-5 one at a time and read the .display text, computed font size and scrollWidth/clientWidth after each press.
+- **Expected result:** Display font shrinks stepwise (approx 2.6, 2, 1.6rem), text stays inside the display; Groovy heading unaffected.
+- **Actual result:** Font size 41.6px (2.6rem) for 1-8 digits, 32px (2rem) for 9-10 digits, 25.6px (1.6rem) for 11-12 digits. Input capped at 12 digits (123456789123). scrollWidth equalled clientWidth (328) at every length, so no overflow. The .title still read 'Groovy'.
 - **Defects:** None
 
 ### MC-203
 
-- **Action:** Playwright Chromium against http://127.0.0.1:5173: emulated prefers-reduced-motion: reduce, loaded page, sampled body computed style at load and after 10s; then emulated no-preference without reload and sampled at once and after 1.5s.
-- **Expected result:** Under reduce, the gradient background is static and still visible (not blank); after switching back, the background begins moving again without reload.
-- **Actual result:** Under reduce: animation-name none, background-position '0px 0px, 0px 0px' at load and after 10s (static); background-image remained repeating-radial-gradient (not blank). After switching to no-preference without reload: animation-name groovy, background-position 0.167% -> 16.67% over 1.5s (moving).
+- **Action:** At 1280x800 read computed styles and bounding boxes for body, .title and .calculator, and sampled body background-position twice 3s apart.
+- **Expected result:** Animated multi-color background still animates; Groovy heading and card are centered together as a group horizontally and vertically; card keeps brown styling.
+- **Actual result:** Body has animation 'groovy' with a repeating-radial-gradient of gold/orange colors. background-position moved from 20.832% to 50.997% over 3s, so it is animating. Title box x=534.7, w=210.7 (center 640). Card x=460, w=360 (center 640). Group spans y=140.5 to y=659.5 (center 400 in the 800px viewport). Card background rgb(59,35,20), brown.
 - **Defects:** None
 
 ### MC-204
 
-- **Action:** Read the MC-204 row from MANUAL_CHECKLIST.json. I did not watch the background through a loop, because that needs a person to judge motion in real time.
-- **Expected result:** Motion is continuous and smooth with groovy rings and swirl in orange, gold, brown, green and cream, and no visible jump or seam at the loop restart.
-- **Actual result:** Not observed. Whether the motion is smooth, whether the colours look right, and whether the loop restart shows a seam are human visual judgments over about 20 seconds. I did not make them and did not infer them from other results.
+- **Action:** Playwright at http://127.0.0.1:5173 with viewport 320x640: measured H1 'Groovy' box, document scrollWidth vs clientWidth, attempted scrollTo(500,0), and clicked 7 + 8 = keys.
+- **Expected result:** No horizontal scrolling, Groovy on one line within the card width and centered above the calculator, keys remain usable.
+- **Actual result:** H1 Groovy is on 1 line, spans x=94.2..225.8 (center 160.0 = viewport center 160), height 47. scrollWidth 320 = clientWidth 320; scrollX stayed 0 after scrollTo(500,0). Keys 7,+,8,= produced display 15.
+- **Defects:** None
+
+### MC-205
+
+- **Action:** Playwright at 1280x300 viewport: measured H1 and last key row at scroll top and after scrollTo(0,100000); took screenshots.
+- **Expected result:** Groovy heading fully visible at top, not clipped; scrolling reveals the whole calculator including bottom key row.
+- **Actual result:** At scrollY=0 the H1 spans y=16..90 (inside 300px viewport), fully visible. Page is scrollable (scrollHeight 551). At bottom (scrollY=251) the last key row spans y=214..268, inside the viewport. No horizontal overflow (scrollWidth 1280).
+- **Defects:** None
+
+### MC-206
+
+- **Action:** Loaded http://127.0.0.1:5173 in headless Chromium (1280x800) and took three screenshots at t=0s, ~4s and ~8s, reading computed styles of the heading. The animation cycle length was not measured, so the offsets are approximate.
+- **Expected result:** Gold Groovy heading with dark brown outline and orange glow, in the theme's rounded font, readable in all three screenshots and above (not inside) the brown card.
+- **Actual result:** H1.title 'Groovy': color rgb(225,173,1) (gold), font Fredoka (rounded), weight 700, text-shadow of rgb(59,35,20) at 4 offsets (dark brown outline) plus rgb(204,85,0) 18px glow (orange). Its box y=140.5-214.5 sits above the .calculator card (y=230.5) and card.contains(h) is false. I viewed the t=4s screenshot and the heading was clearly readable against the swirling background. I did not open the t=0s and t=8s screenshots, so readability at those offsets rests on the identical computed styles.
 - **Defects:** None
 
 ### MC-301
 
-- **Action:** Loaded http://127.0.0.1:5173 in headless Chromium (normal motion, 900x700). Read computed styles of body; took 7 screenshots over ~27s (t=0 plus every 4.5s); then paused the CSS animation via the Web Animations API and compared frames at currentTime 0, 10000, 19990 and 20000ms to check the loop wrap. No video was watched by a human.
-- **Expected result:** Groovy 70s background (concentric rings plus conic swirl in orange, gold, brown, green, cream) moves continuously and smoothly, and the loop wraps at 20s without a visible jump or seam.
-- **Actual result:** Body has animation 'groovy' 20s linear infinite, with background layers repeating-radial-gradient (gold/orange/green) and conic-gradient (orange/green/brown). Background-size is 200% 200%. All 7 screenshots over ~27s differ (hashes 7f3a04d0 46ec1b44 ae0d84aa 0de3532a b5e19561 6be388b8 9dff0fc7), so it moves continuously. Keyframes run background-position 0 0 to 200% 200% on the radial layer and -200% -200% on the conic layer. At 200% size that shift is exactly one tile width, so the wrap is seamless. The rendered frame at 20000ms (fb272972) is identical to the frame at 0ms (fb272972), while 19990ms differs (842acc41). Smoothness is judged from linear timing and distinct frames only, not from video.
+- **Action:** Opened the app at 1280x800 without interacting, inspected the screenshot and the heading and card bounding boxes.
+- **Expected result:** Bold gold 'Groovy' heading in the rounded retro font, centered directly above the brown calculator card, with dark outline and orange glow, and the animated background unchanged.
+- **Actual result:** Heading is bold (700), gold, Fredoka, with brown outline and orange glow. Heading center x = 534.67+210.66/2 = 640, matching the card center 460+180 = 640. It sits directly above the card (bottom 214.5 vs card top 230.5). The screenshot shows the animated concentric orange/green/gold background intact. The background was not compared against a prior baseline beyond visual inspection.
 - **Defects:** None
 
 ### MC-302
 
-- **Action:** Loaded http://127.0.0.1:5173 in headless Chromium (normal motion), computed styles/contrast for the calculator, display and every key, and took screenshots 7s apart (different animation phases). Compared key colors with HEAD theme.css.
-- **Expected result:** Calculator stays an opaque brown panel, background never shows through, display/key text readable at >=4.5:1 against own background, key colors and layout match existing look.
-- **Actual result:** Calculator panel background is opaque rgb(59,35,20) (brown), opacity 1; display cream on its bg. Key colors and layout unchanged from HEAD (.key-op gold/brown, .key-equals green/cream, .key-clear orange/cream are not in the diff). Measured contrast: digit keys 13.05:1, operator keys 7.09:1, display text passes, BUT clear (C) and backspace keys (cream on orange) = 3.85:1 and equals (cream on green) = 4.08:1, both below the 4.5:1 AA threshold stated in the expected result.
-- **Defects:** None filed; C/backspace (3.85:1) and = (4.08:1) key text contrast below 4.5:1 (pre-existing key colors, unchanged by this work)
+- **Action:** Loaded http://127.0.0.1:5173 at 1280x800 with Playwright; captured three screenshots at t≈0s, 4s, 8s of the animated background (/tmp/w7_0.png, w7_1.png, w7_2.png); viewed first and last, which show visibly different background ring positions, and measured the h1.title.
+- **Expected result:** The "Groovy" title is readable against the background in all three screenshots.
+- **Actual result:** Gold (rgb 225,173,1) Groovy title with dark outline/orange glow is legible in the 0s and 8s screenshots, whose backgrounds differ (ring centre moved from bottom-right to top-left). Title geometry was identical in all three captures (x 534.7-745.3, centred at 640).
+- **Defects:** None
 
 ### MC-303
 
-- **Action:** Loaded http://127.0.0.1:5173 in Playwright Chromium with reducedMotion=reduce emulated, took screenshots 5s apart and read computed body styles, then switched emulation to no-preference without reloading and sampled again. OS-level setting not toggled; browser media-feature emulation used.
-- **Expected result:** With reduce motion on, the gradient background is static. After switching it off, it animates without reload.
-- **Actual result:** Reduce: animation-name none, background-position 0px 0px, 0px 0px at t=0 and t=5s; screenshots byte-identical. After switching to no-preference without reload: animation-name groovy, background-position 15.665% -> 36.4983% over 2s, i.e. moving.
+- **Action:** Set the viewport to 320x640, measured the title and card bounding boxes, attempted window.scrollTo(100,0) and read scrollX, scrollWidth and clientWidth, and viewed the screenshot /tmp/w7_small.png.
+- **Expected result:** The title stays on one line, is not clipped, is centered over the card, and the page has no horizontal scrollbar.
+- **Actual result:** Title is a single line (height 47px, x 94.2-225.8, width 131.7, centre 160.0). Card spans x 12.8-307.2 (centre 160.0, width 294.4), so the title is narrower than the card and centred over it. scrollWidth 320 equals clientWidth 320, and scrollX stayed 0 after scrolling right. The screenshot shows the whole title with no clipping.
 - **Defects:** None
 
 ### MC-304
 
-- **Action:** Loaded http://127.0.0.1:5173 in headless Playwright with the background animation running (1 CSS animation, repeating-radial-gradient body background). Clicked 1,2,+,7,= then C; typed 12+7= on the keyboard; pressed Escape. Recorded calculator bounding box before/after, layout-shift total, and all network requests.
-- **Expected result:** Math, key presses and display updates work as before; no flicker, lag or layout shift; no external resource requests.
-- **Actual result:** Display read 19 after click entry, 0 after C, 19 after keyboard entry, 0 after Escape. Calculator bounding box unchanged. Layout-shift total 0 over 1.5s. All 14 requests were to 127.0.0.1:5173 (page, vite client, modules, src/theme.css); none external. Responsiveness was immediate in the script. Flicker is a subjective visual judgment that headless automation cannot fully make; no layout or display anomalies were measured.
+- **Action:** Loaded http://127.0.0.1:5173/ in Playwright Chromium at 1280x300, scrolled to bottom and back to top, measuring the title and key rectangles (script .uncle/tests/mc304.cjs).
+- **Expected result:** The title is fully visible at the top, the page scrolls vertically, and the whole calculator can be reached with nothing clipped.
+- **Actual result:** scrollHeight 551 > viewport 300, so the page scrolls vertically. Title top = 16px at scrollY 0 (fully visible, same after scrolling back). At the bottom (scrollY 251) the lowest key bottom is 268 of 300, so every key is reachable. Leftmost key/display edge is at x=476, so nothing is clipped horizontally.
+- **Defects:** None
+
+### MC-305
+
+- **Action:** At 1280x900, clicked 1, 2, +, 7, = then typed 123456789012 via keyboard (after pressing 'c' to clear), then typed +5= and compared the title position before and after.
+- **Expected result:** Arithmetic gives correct results, the display updates and shrinks its font as before, and the heading does not move or interfere.
+- **Actual result:** 12+7= displayed 19 (font 41.6px). Typed 123456789012 displayed in full (font 25.6px, smaller). +5= gave 123456789017, which is correct. Title top shifted by 2.4px between the short and long entries. This is a centering side effect: the display's min-height 4.2rem is exceeded at the larger font, so the display height changes with the font size. The heading never overlapped or interfered with the calculator. I treated the shift as pre-existing display-shrink behaviour, not a heading defect.
+- **Defects:** None
+
+### MC-400
+
+- **Action:** Drove http://127.0.0.1:5173 in headless Chromium at 1280x800: clicked 12 + 7 =, cleared, clicked 9 * 3 =, cleared, typed 8/2 + Enter on keyboard, cleared, then typed digits up to 19 characters while reading the display's font-size.
+- **Expected result:** Results 19, 27, 4; display updates; font shrinks for long input as before.
+- **Actual result:** Displays read 19, 27, 4; clear returned 0. Font-size was 2.6rem at 0 and 5 digits, 2rem at 10 digits, 1.6rem at 12 digits (input capped at 12 chars). Display scrollWidth equals clientWidth (328/328), so text stays inside.
 - **Defects:** None
 
 ### MC-401
 
-- **Action:** Loaded http://127.0.0.1:5173 in Chromium (Playwright, reducedMotion=no-preference), confirmed the body 'groovy' animation was running, then clicked keypad buttons with the mouse: 12+7=, 9*8=, C, 1.5+2.25=, 5-8=, +3= (on the -3 result), 9/4=, 1-2-3 then backspace. Script: .uncle/tests/mc401.mjs
-- **Expected result:** Every calculation gives the same correct result as before; display updates and clear work normally while the background animates.
-- **Actual result:** 12+7=19; 9*8=72; C gave 0; 1.5+2.25=3.75; 5-8=-3; -3+3=0; 9/4=2.25; 123 then backspace gave 12. Background animation 'groovy' on BODY (document.getAnimations() count 1) was active before and after the sequence.
+- **Action:** Loaded the app at 1280x800 and sampled the body's background-position and the title/card geometry at 0s, 5s and 10s. Screenshots at 0s and 5s were saved to /tmp/mc401a.png and /tmp/mc401b.png but not visually reviewed.
+- **Expected result:** Multi-color animated background still moves; title and card are centered together as a group; card styling (brown card, buttons) unchanged.
+- **Actual result:** Animation 'groovy' is active and background-position advanced from 14.17% to 66.33% to 118.50%. Title center x and card center x are both 640, which is the viewport center at width 1280. The title+card group's vertical midpoint is 400, which is the viewport midpoint at height 800. Card background is rgb(59,35,20) (brown) and the digit key background is rgb(255,241,208) (cream).
 - **Defects:** None
 
 ### MC-402
 
-- **Action:** Drove http://127.0.0.1:5173 with Playwright keyboard presses (page focused, no clicks) and read the display (data-testid=display) after each step: 1,2,+,3 then Enter, Backspace, Escape; separately 7,*,6,Enter; separately 1,2,3,Backspace.
-- **Expected result:** Keyboard input behaves as before: digits and operators register, Enter evaluates, Backspace and Escape edit and clear.
-- **Actual result:** 1,2,+,3 showed 3; Enter showed 15; Backspace on the evaluated result left 15 (unchanged); Escape showed 0; 7,*,6,Enter showed 42; 1,2,3 showed 123 and Backspace gave 12.
+- **Action:** Loaded http://127.0.0.1:5173 in headless Chromium at 320x640, attempted scrollTo(500,0), measured widths, clicked 7,+,5,= keys.
+- **Expected result:** No horizontal scroll, Groovy title on one line and not wider than card, keys work.
+- **Actual result:** documentElement scrollWidth=320=clientWidth, body scrollWidth=320, scrollX stayed 0 after scrollTo(500,0). h1 40px, white-space nowrap, width 131.7 (x 94-226) inside card (x 12.8-307.2); h1 scrollWidth=clientWidth=132. Keys 7,+,5,= produced display 12.
 - **Defects:** None
 
-### MC-404
+### MC-403
 
-- **Action:** Read the checklist row. No live viewing was performed: the row needs a person to watch about 30 seconds of animation, including one 20s loop boundary, and judge smoothness, seam, flicker and stutter.
-- **Expected result:** Background moves continuously and smoothly with 70s-style rings and swirl, with no visible jump, flicker, or seam at loop restart, and no stutter in calculator interaction.
-- **Actual result:** Not observed. A scripted check cannot judge perceived smoothness or a loop-restart seam, so no PASS is claimed.
-- **Defects:** None
-
-### MC-405
-
-- **Action:** Used Playwright (Chromium) against http://127.0.0.1:5173 with prefers-reduced-motion emulated as 'reduce' on load; sampled body computed animation and background-position twice 1.5s apart; pressed 7 + 8 = on the calculator; then switched emulation to no-preference without reloading and sampled again after 1.5s. Screenshots /tmp/mc405/static.png and moving.png. Emulation stands in for the OS toggle.
-- **Expected result:** With reduce on, the background is static at its base position and the calculator still works; turning it off starts the animation live without a reload.
-- **Actual result:** Reduce on: animation-name none, background-position '0px 0px, 0px 0px' at both samples (static); 7+8= displayed 15. After switching to no-preference with no reload: animation-name groovy, background-position moved 0.333% -> 15.67% (and -0.333% -> -15.67% for the second layer), so the animation started live.
-- **Defects:** None
-
-### MC-406
-
-- **Action:** Loaded http://127.0.0.1:5173 in headless Chromium at 400x700 and 1600x900; read computed body/html styles, scroll dimensions, console errors, and all network request URLs via a temporary Playwright script (.uncle/tests/mc406.cjs). No screenshots were taken.
-- **Expected result:** Background fills the viewport at all sizes with no gaps, layout unchanged, no console errors, no non-localhost requests.
-- **Actual result:** At both sizes body has a repeating-radial-gradient background (size 200% 200%, repeat) and body height equals the viewport (700/700, 900/900). Scroll width equals viewport width (400/400, 1600/1600), so there is no horizontal overflow. 0 console or page errors. 30 requests were made, all to 127.0.0.1, none external. Layout unchanged was judged only from the absence of overflow and the body height; it was not compared against a baseline and no screenshots were captured.
+- **Action:** Set viewport to 1280x300, captured top screenshot, scrolled to bottom, captured screenshot, clicked keys 2,0,. and = after scrolling to bottom.
+- **Expected result:** Title fully visible at top, nothing clipped, scrolling reveals whole calculator including bottom key row, keys clickable.
+- **Actual result:** Title rect top=16,bottom=90 at scroll top (fully visible). Page scrollHeight 551 vs viewport 300; scrolled to y=251 (max). Bottom row key '0' at top 214 bottom 268 within 300px viewport; clicking 2,0,. changed display to '20.' and = click succeeded.
 - **Defects:** None
 
 ## Acceptance gate
 
 | ID | Required | Status | Evidence |
 |---|---|---|---|
-| MC-101 | YES | PASS | Animation timeline sampled: groovy running, duration 20000, iterations infinite; screenshots /tmp/mc101_0..6.png (mc101_2 viewed: rings and swirl in orange, gold, green, brown, cream); src/theme.css lines 24-34. |
-| MC-102 | YES | PASS | Script .uncle/tests/mc102.cjs output: reduce -> ['none','running','0px 0px, 0px 0px'], reduce+1s unchanged; off -> ['groovy',...], off+1s '10.3327% 10.3327%, -10.3327% -10.3327%'. CSS in src/theme.css has @media (prefers-reduced-motion: reduce){body{animation:none}}. Emulation used rather than OS setting; visual look not human-inspected. |
-| MC-103 | YES | PASS | Playwright output: '12+3= 15', '9*8= 72', calculator style [rgb(59, 35, 20), 1, none]; screenshot /tmp/mc103.png shows opaque brown panel over rings. Script: .uncle/tests/mc103.cjs and mc103b.cjs. |
-| MC-200 | YES | PASS | Temporary script .uncle/tests/mc200.mjs output: '12+7=19 / C=0 / 9*8=72 / kbd5+3=8 / esc=0' and key list above; selectors taken from the rendered DOM (.key, data-key, data-testid=display). No prior-layout baseline was compared beyond expected standard calculator layout and arithmetic results. |
-| MC-202 | YES | PASS | Playwright output: reqs all prefixed http://127.0.0.1:5173/; errs=[] |
-| MC-203 | YES | PASS | Script .uncle/tests/mc203.cjs output: {a:[none,'0px 0px, 0px 0px',repeating-radial-gradient],c:[none,same,same],d:[groovy,'0.167% 0.167%, -0.167% -0.167%'],e:[groovy,'16.6663% 16.6663%, -16.6663% -16.6663%']}; screenshot /tmp/mc203.png taken under reduce but not visually inspected (visibility inferred from computed background-image). |
-| MC-204 | YES | BLOCKED-HUMAN | No live observation was recorded. No driver or automated result was cited as covering this row. |
-| MC-301 | YES | PASS | Scripts .uncle/tests/mc301.mjs and mc301b.mjs; screenshots /tmp/mc301_0..6.png; src/theme.css lines 15-34. Computed animation: groovy 20s linear infinite. |
-| MC-302 | YES | FAIL | Computed-style contrast table from .uncle/tests/mc302.mjs; screenshots /tmp/mc302a.png and /tmp/mc302b.png; git diff HEAD of src/theme.css shows only body background/animation changed, key colors pre-existing. |
-| MC-303 | YES | PASS | Script .uncle/tests/mc303.mjs output: {"a":["0px 0px, 0px 0px","none"],"c":["0px 0px, 0px 0px","none"],"identical":true,"d":["15.665% 15.665%, ...","groovy"],"e":["36.4983% 36.4983%, ...","groovy"]} |
-| MC-304 | YES | PASS | Output: out=[19,0,19,0], same-rect=true, layout-shift=0, requests all local. Screenshot at /tmp/mc304.png. Script at .uncle/tests/mc304.mjs. |
-| MC-401 | YES | PASS | Script console output: anims ['BODY:groovy','BODY:groovy','total:1']; 12+7= "19"; 9*8= "72"; clear "0"; 1.5+2.25= "3.75"; 5-8= "-3"; neg+3= "0"; 9/4= "2.25"; bksp "12"; anims after same as before. |
-| MC-402 | YES | PASS | Observed display values: 3 -> 15 -> 15 -> 0; 42; 123 -> 12. Scripted run, no screenshot. 'As before' was judged on behavior only, not compared to the pre-change build; Backspace on a result being a no-op is plausible existing behavior. |
-| MC-404 | YES | BLOCKED-HUMAN | None. No screen recording or notes were captured. |
-| MC-405 | YES | PASS | Script output: a=[none,0px 0px,0px 0px], a2 identical, display '15', m1=[groovy,0.333%...], m2=[groovy,15.6657%...]. Screenshots static.png and moving.png in /tmp/mc405. Real OS settings toggle was not used; emulated media feature instead. |
-| MC-406 | YES | PASS | Script output JSON: errs=[], ext=[], n=30; sh/ih and sw/iw match at both viewports; bg is a CSS gradient (no image/font/style fetches). |
+| MC-101 | YES | PASS | Computed-style and bounding-box JSON output from .uncle/tests/mc101.cjs; screenshot /tmp/mc_0.png viewed. |
+| MC-102 | YES | PASS | Screenshots /tmp/mc_0.png, /tmp/mc_1.png, /tmp/mc_2.png viewed. |
+| MC-103 | YES | PASS | Script .uncle/tests/mc103.cjs output: 320 {t:[94.16,225.83,131.67,47], c:[12.8,307.19,294.39], sw:320, cw:320, tcenter:159.99, ccenter:159.99, ws:nowrap}; scrollX 0 |
+| MC-104 | YES | PASS | Script output: top [16,90]; bottom {maxBottom:268,minTop:-43,n:18,vh:300,sy:251,sh:551}. minTop -43 is only the scrolled-off top keys at the bottom scroll position. |
+| MC-105 | YES | PASS | Script .uncle/tests/run.mjs output: a=19, b=24, fsBefore=2.6rem, fsAfter=1.6rem, title0=Groovy, title1=Groovy. No screenshots taken. |
+| MC-201 | YES | PASS | Script output: a=19, clr1=0, c=27, clr2=0, e=20. No screenshots taken, values were read from the display element. |
+| MC-202 | YES | PASS | Playwright log: '12345678'->41.6px; '123456789'->32px; '12345678912'->25.6px; sw=cw=328 throughout. Screenshot saved at /tmp/a.png. |
+| MC-203 | YES | PASS | Playwright output: title [534.67,140.5,210.66,74]; calculator [460,230.5,360,429] bg rgb(59, 35, 20); background-position 20.832% then 50.997%, animationName groovy. No separate pair of screenshots was taken; the animation was verified through computed-style sampling. |
+| MC-204 | YES | PASS | Script /tmp/mc/t.mjs and /tmp/mc/k.mjs output; screenshot /tmp/mc/a.png; 18 buttons present, last button bottom 550 < 640. |
+| MC-205 | YES | PASS | Script /tmp/mc/t.mjs output; screenshots /tmp/mc/top.png and /tmp/mc/bot.png. |
+| MC-206 | YES | PASS | .uncle/tests/w6/s0.png, s1.png, s2.png; computed-style JSON from the script. Only s1.png was visually inspected. |
+| MC-301 | YES | PASS | .uncle/tests/w6/s1.png screenshot; bounding-box and computed-style JSON. |
+| MC-302 | YES | PASS | Screenshots /tmp/w7_0.png and /tmp/w7_2.png inspected visually; DOM: <h1 class="title">Groovy</h1> above .calculator. The middle screenshot was captured but not viewed; only measured geometry was checked for it. Cycle length was not measured, so the three shots are spaced ~4s apart and not verified as exactly 0/50/100% of the cycle. |
+| MC-303 | YES | PASS | Playwright measurements and the screenshot /tmp/w7_small.png; script at .uncle/tests/w7/p.mjs. |
+| MC-304 | YES | PASS | Playwright measurements: sh=[551,300], titleTop=16, scrollY=251, keys bottom 268/300, minLeft=476, overflow-y visible on html and body. |
+| MC-305 | YES | PASS | Playwright output: d1='19', fsShort=41.6px, d2='123456789012', fsLong=25.6px, d3='123456789017', titleMoved=2.41px. theme.css: .display min-height 4.2rem, padding 12px 14px; Calculator.jsx size logic 2.6rem/2rem/1.6rem. |
+| MC-400 | YES | PASS | Playwright script .uncle/tests/run.mjs output: a=19, b=27, c=4, fs0=2.6rem, fs5=2.6rem, fs10=2rem, fs19=1.6rem, t19=123456789012, fits=[328,328]. |
+| MC-401 | YES | PASS | Playwright computed styles and bounding rects from .uncle/tests/run.mjs: g1, g2 and g3 values. Smoothness of the motion was judged only from the position changes, not by eye. |
+| MC-402 | YES | PASS | Screenshot /tmp/mc402.png; script .uncle/tests/mc402.cjs and mc2.cjs output as above. |
+| MC-403 | YES | PASS | Screenshots /tmp/mc403top.png and /tmp/mc403bot.png; scripts in .uncle/tests/. Note: screenshots were captured but not visually inspected; verdict is from DOM measurements and click results. |

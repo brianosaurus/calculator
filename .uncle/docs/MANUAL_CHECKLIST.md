@@ -1,148 +1,157 @@
 # Manual checklist
 
 ### MC-101
+- Exclusive resources: none
 - Depends on: none
-- Exact action: Open the app in a browser with normal motion and watch the page background for about 30 seconds.
-- Expected result: A groovy 70s background of concentric rings and a conic swirl in orange, gold, brown, green and cream moves continuously and smoothly, with no visible jump or seam when the loop restarts.
+- Exact action: Open the app at a default desktop viewport and look at the page.
+- Expected result: A visible heading reading exactly "Groovy" appears above the calculator card, horizontally centered over it, in a bold rounded retro font in gold with a dark outline and orange glow.
 - Actual result: 
 - Status: NOT RUN
 
 ### MC-102
+- Exclusive resources: none
 - Depends on: none
-- Exact action: With the app open, enable the OS or browser reduce-motion setting (or emulate prefers-reduced-motion: reduce) without reloading, then toggle it back to no-preference.
-- Expected result: With reduce on, the background stops and shows a static gradient. With reduce off, the motion resumes without a reload.
+- Exact action: Watch the animated background across a full cycle, capturing screenshots at roughly 0%, 50% and 100% of the cycle.
+- Expected result: The Groovy title is readable against the background in all three screenshots, and the background animation and calculator centering look unchanged.
 - Actual result: 
 - Status: NOT RUN
 
 ### MC-103
+- Exclusive resources: none
 - Depends on: none
-- Exact action: Look at the calculator, display and keys over the animated background, then use the calculator for a few operations (e.g. 12+3=).
-- Expected result: The calculator stays on an opaque brown background, so the animation never shows through. Display and key text are readable, key colors and layout look unchanged, and the calculations are correct.
+- Exact action: Resize the viewport to 320x640 and view the page, then scroll horizontally.
+- Expected result: The title stays on a single line, is no wider than the card, stays centered over it, and there is no horizontal scrollbar or clipping.
 - Actual result: 
 - Status: NOT RUN
 
-### MC-200
+### MC-104
 - Exclusive resources: none
 - Depends on: none
-- Exact action: Open the app in a normal-motion browser, press several keys (digits, operators, equals, clear) and compute e.g. 12+7= and 9*8=.
-- Expected result: Calculator arithmetic, display output and key layout behave exactly as before; no logic regressions.
+- Exact action: Set the viewport to 1280x300 and scroll the page from top to bottom.
+- Expected result: The title is not clipped at the top, and scrolling vertically reveals the whole calculator including the bottom row of keys.
+- Actual result: 
+- Status: NOT RUN
+
+### MC-105
+- Exclusive resources: none
+- Depends on: none
+- Exact action: Use the calculator by clicking keys (e.g. 12 + 7 =) and typing on the keyboard (e.g. 8 * 3 Enter), including a long number so the display font shrinks.
+- Expected result: Results are correct (19 and 24), the display updates normally, the font shrinks for long input, and the title remains in place and unchanged.
+- Actual result: 
+- Status: NOT RUN
+
+### MC-201
+- Exact action: Open the app at the default desktop viewport and use the mouse to enter 12 + 7 = then 9 x 3 =, and clear; also type 5 * 4 Enter on the keyboard.
+- Expected result: Display shows 19, then 27, then cleared; keyboard entry yields 20. Calculator arithmetic and display updates behave exactly as before the Groovy heading was added.
+- Evidence to capture: Screenshots of the display after each result and a note of values observed.
 - Actual result: 
 - Status: NOT RUN
 
 ### MC-202
-- Exclusive resources: none
-- Depends on: none
-- Exact action: Open the app with browser devtools Network panel visible, reload, and watch requests while the background animates.
-- Expected result: Only same-origin localhost requests appear; no external fonts, images or CDN requests, and no console errors.
+- Exact action: Enter a long number (about 12+ digits) via keys and watch the display text size at each length.
+- Expected result: The display font still shrinks stepwise as text grows (approx 2.6, 2, 1.6rem) and text remains inside the display; the Groovy heading is unaffected.
+- Evidence to capture: Screenshots at short, medium and long input lengths.
 - Actual result: 
 - Status: NOT RUN
 
 ### MC-203
-- Exclusive resources: none
-- Depends on: none
-- Exact action: Enable the OS or devtools prefers-reduced-motion: reduce setting, reload, and observe the page for 10 seconds; then switch it back to no-preference without reloading.
-- Expected result: Under reduce, the gradient background is static and still visible (not blank); after switching back, the background begins moving again without reload.
+- Exact action: Open the app at a desktop viewport and inspect the page visually for several seconds.
+- Expected result: The animated multi-color 70s background still animates unchanged, and the Groovy heading plus calculator card are centered together as a group horizontally and vertically, with the card keeping its brown themed styling.
+- Evidence to capture: Two screenshots a few seconds apart showing the background changing and the group centered.
 - Actual result: 
 - Status: NOT RUN
 
 ### MC-204
-- Exclusive resources: none
-- Depends on: none
-- Exact action: With normal motion, watch the background through at least one full loop (about 20 seconds), including the loop restart point.
-- Expected result: Motion is continuous and smooth with groovy rings and swirl in orange, gold, brown, green and cream, and no visible jump or seam at the loop restart.
+- Exact action: Set the viewport to 320x640 and view the page; try scrolling horizontally and operate a few calculator keys.
+- Expected result: No horizontal scrollbar or sideways scrolling, the word Groovy fits on one line within the card width and is centered above the calculator, and keys remain usable.
+- Evidence to capture: Screenshot at 320x640 and a note whether horizontal scroll was possible.
 - Actual result: 
 - Status: NOT RUN
 
-## resources
+### MC-205
+- Exact action: Set the viewport to a short landscape size such as 1280x300 and scroll vertically through the page.
+- Expected result: The Groovy heading is fully visible at the top of the page (not clipped above the fold), and scrolling reveals the entire calculator including the bottom row of keys.
+- Evidence to capture: Screenshots at scroll top and scroll bottom.
+- Actual result: 
+- Status: NOT RUN
+
+### MC-206
+- Exact action: Look at the heading with the animated background at roughly the start, middle and end of its cycle (take three screenshots spaced across the cycle).
+- Expected result: The gold Groovy heading with dark brown outline and orange glow, in the theme's rounded font, is readable in all three screenshots and sits above (not inside) the brown calculator card.
+- Evidence to capture: Three screenshots with the approximate time offsets and a readability pass/fail note.
+- Actual result: 
+- Status: NOT RUN
 
 ### MC-301
-- Required for acceptance: YES
 - Exclusive resources: none
 - Depends on: none
-- Exact action: Open the running app in a normal-motion browser and watch the page background for about 30 seconds, including past one full 20s loop.
-- Expected result: The groovy 70s background (concentric rings plus conic swirl in orange, gold, brown, green, cream) moves continuously and smoothly, and the loop wraps without a visible jump or seam.
-- Evidence to capture: Screen recording or timed screenshots spanning more than 20 seconds, plus a note on smoothness and any seam at the loop point.
+- Exact action: Open the app in a browser at a default desktop viewport and look at the page without interacting.
+- Expected result: A bold, gold "Groovy" heading in the theme's rounded retro font appears centered directly above the brown calculator card, with a dark outline and orange glow, and the animated background is unchanged.
 - Actual result: 
 - Status: NOT RUN
 
 ### MC-302
-- Required for acceptance: YES
 - Exclusive resources: none
 - Depends on: none
-- Exact action: With motion allowed, inspect the calculator, display and keys against the animated background while it cycles through its brightest and darkest regions.
-- Expected result: The calculator stays an opaque brown panel, the animated background never shows through it, and display and key text remain clearly readable (at least WCAG AA 4.5:1 against its own background). Key colors and layout match the existing look.
-- Evidence to capture: Two or more screenshots at different animation phases showing the full calculator, with readability notes.
+- Exact action: Capture three screenshots of the page at about 0%, 50% and 100% of the background animation cycle, with the viewport unchanged.
+- Expected result: The "Groovy" title is readable against the background in all three screenshots.
 - Actual result: 
 - Status: NOT RUN
 
 ### MC-303
-- Required for acceptance: YES
-- Exclusive resources: browser:system
+- Exclusive resources: none
 - Depends on: none
-- Exact action: Turn on the OS or browser reduce-motion setting and reload the page, then watch for 10 seconds. Toggle the setting back off without reloading and watch again.
-- Expected result: With reduce motion on, the gradient background is static and does not move. After switching it off, the background starts animating without a reload.
-- Evidence to capture: Two screenshots about 5 seconds apart under reduce-motion, showing they are identical, plus a note or recording showing motion resuming after the toggle.
+- Exact action: Resize the browser to 320x640 and view the page, then scroll horizontally.
+- Expected result: The title stays on one line, is not clipped, is centered over the card, and the page has no horizontal scrollbar.
 - Actual result: 
 - Status: NOT RUN
 
 ### MC-304
-- Required for acceptance: YES
 - Exclusive resources: none
 - Depends on: none
-- Exact action: Use the calculator while the background animates: click keys and type with the keyboard to run a few calculations (for example 12+7=, then clear).
-- Expected result: Calculator math, key presses and display updates work as before. The animation causes no flicker, lag or layout shift, and the page makes no visible requests for external resources.
-- Evidence to capture: Screenshot of the display showing a correct result during animation, plus a note on responsiveness and any flicker.
+- Exact action: Resize the browser to a short viewport (about 1280x300) and scroll vertically from top to bottom.
+- Expected result: The title is fully visible at the top, the page scrolls vertically, and the whole calculator can be reached with nothing clipped.
+- Actual result: 
+- Status: NOT RUN
+
+### MC-305
+- Exclusive resources: none
+- Depends on: none
+- Exact action: Use the calculator by clicking keys and typing on the keyboard, e.g. 12 + 7 = and a long number entry.
+- Expected result: Arithmetic gives correct results, the display updates and shrinks its font as before, and the heading does not move or interfere.
 - Actual result: 
 - Status: NOT RUN
 
 ## Regressions
 
+### MC-400
+- Required for acceptance: YES
+- Exact action: Open the app in a browser at default desktop size and use the mouse to compute 12 + 7 = then 9 x 3 =, then use the keyboard to enter 8 / 2 Enter, and type a very long number so the display text grows.
+- Expected result: Each result is correct (19, 27, 4), the display updates, and the font shrinks for long input exactly as before the change.
+- Evidence to capture: Screenshots of the display after each calculation and after the long entry, with the observed values.
+- Actual result: 
+- Status: NOT RUN
+
 ### MC-401
 - Required for acceptance: YES
-- Exclusive resources: none
-- Depends on: none
-- Exact action: Open the app with normal motion and use the mouse to enter and evaluate several calculations (e.g. 12+7=, 9*8=, clear, decimals, negative numbers).
-- Expected result: Every calculation gives the same correct result as before; display updates and clear work normally while the background animates.
-- Evidence to capture: Screenshot or notes of inputs with displayed results.
+- Exact action: Load the app at default desktop size and watch the page background for about 10 seconds; look at the Groovy title and calculator together.
+- Expected result: The multi-color animated background still moves smoothly, and the title plus calculator card are centered together as a group with the card styling (brown card, buttons) unchanged.
+- Evidence to capture: Two screenshots several seconds apart showing the background changed and the group stayed centered.
 - Actual result: 
 - Status: NOT RUN
 
 ### MC-402
 - Required for acceptance: YES
-- Exclusive resources: none
-- Depends on: none
-- Exact action: Type calculations on the physical keyboard (digits, operators, Enter, Backspace, Escape) with the page focused.
-- Expected result: Keyboard input behaves as before: digits and operators register, Enter evaluates, Backspace and Escape edit and clear.
-- Evidence to capture: Notes or screenshot of keystrokes and display results.
+- Exact action: Resize the browser viewport to 320x640 and look at the page, trying to scroll sideways; then use a few calculator keys.
+- Expected result: No horizontal scrollbar or sideways scrolling appears, the Groovy title is on one line and not wider than the card, and the keys still work.
+- Evidence to capture: Screenshot at 320x640 and a note on whether horizontal scrolling was possible.
 - Actual result: 
 - Status: NOT RUN
 
-### MC-404
+### MC-403
 - Required for acceptance: YES
-- Exclusive resources: none
-- Depends on: none
-- Exact action: Watch the page background for about 30 seconds at normal motion, including across one loop boundary of the 20s cycle.
-- Expected result: Background moves continuously and smoothly with 70s-style rings and swirl, with no visible jump, flicker, or seam at loop restart, and no stutter in calculator interaction.
-- Evidence to capture: Short screen recording or notes on smoothness and the loop seam.
-- Actual result: 
-- Status: NOT RUN
-
-### MC-405
-- Required for acceptance: YES
-- Exclusive resources: none
-- Depends on: none
-- Exact action: Enable the OS or browser reduce-motion setting, reload the page, then turn it off again without reloading and watch the page.
-- Expected result: With reduce on, the background is static at its base position and the calculator still works; turning it off starts the animation live without a reload.
-- Evidence to capture: Screenshots of the static state and the moving state, with notes on the setting toggle.
-- Actual result: 
-- Status: NOT RUN
-
-### MC-406
-- Required for acceptance: YES
-- Exclusive resources: none
-- Depends on: none
-- Exact action: Load the app, resize the window to narrow and wide sizes, scroll if possible, and check the browser console and network panel.
-- Expected result: The background fills the viewport at all sizes with no blank or tiled gaps and the layout is unchanged. There are no console errors and no non-localhost requests for images, fonts, or styles.
-- Evidence to capture: Screenshots at two sizes plus the console and network panel observations.
+- Exact action: Resize the viewport to a short landscape size such as 1280x300 and scroll the page vertically from top to bottom.
+- Expected result: The Groovy title is fully visible at the top, nothing is clipped, and scrolling reveals the whole calculator including the bottom row of keys, which stay clickable.
+- Evidence to capture: Screenshots at scroll top and scroll bottom.
 - Actual result: 
 - Status: NOT RUN

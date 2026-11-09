@@ -1,35 +1,36 @@
-# Groovy Animated 70s Background
+# Add 'Groovy' heading above the calculator
 
 ## Change Type
-Enhancement (visual theme)
+Feature (visual enhancement)
 
 ## Summary
-Make the calculator page background really super 70s groovy and moving.
+Display the word "Groovy" above the calculator, styled with a font and color that match the groovy 70s look of the page.
 
 ## Motivation
-The operator wants a bolder, animated 1970s look for the page background.
+The page background was recently made groovy and 70s themed. The operator wants a matching title above the calculator to reinforce that look.
 
 ## Observed Current Behavior
-The body background is defined in src/theme.css (around lines 21-24) as a static fixed background using the existing brown, cream, gold, green and orange palette.
+The calculator is shown with the groovy 70s animated background and no title above it.
 
 ## Desired Behavior
-The page background is animated in a distinctly 70s groovy style, for example flowing psychedelic waves, concentric rainbow or retro stripes, and warm earthy colors (orange, gold, brown, green, cream), in continuous smooth motion. The calculator stays fully readable and usable on top of it.
+The word "Groovy" appears above the calculator. It uses a font and color(s) in keeping with a 70s style (for example a rounded, bold, retro display typeface and a warm 70s palette such as orange, gold, or brown that fits the existing background). It is readable against the background and centered above the calculator.
 
 ## Reproduction
-Open the app in a browser and look at the page background: it is static.
+None. This is a new addition. Open the app and observe that no title appears above the calculator.
 
 ## Constraints
-Pure CSS preferred, no new dependencies. Respect prefers-reduced-motion by disabling or greatly reducing the animation. Keep calculator keys and display contrast and layout unchanged. Existing tests must keep passing; tests/e2e/theme.spec.js checks the body backgroundImage and may need updating to match.
+- Font and color must match the existing groovy 70s look of the page.
+- The text must be legible against the moving background.
+- Existing calculator behavior and layout must not break.
 
 ## Known Relevant Files
-- src/theme.css
-- tests/e2e/theme.spec.js
-- index.html
+index.html and the files under src/ (the exact stylesheet and component files are to be determined during planning).
 
 ## Out of Scope
-Calculator logic, key layout, and button colors.
+- Changes to calculator logic or buttons.
+- Changes to the background design.
 
 ## Success Criteria
-- Background visibly animates continuously with a 70s groovy look.
-- Calculator remains readable and all existing tests pass (theme test updated if needed).
-- Animation is disabled or reduced under prefers-reduced-motion.
+- The word "Groovy" is visible above the calculator.
+- Its font and color visibly fit the 70s groovy theme and are readable.
+- The existing tests still pass and the calculator works as before.
