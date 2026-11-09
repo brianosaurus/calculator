@@ -1,34 +1,36 @@
-# Change Request: Heading text
+# Change Request: 60s psychedelic styling
 
 ## Change Type
-Text change
+Feature (visual restyle)
 
 ## Summary
-Change the calculator heading from 'Groovy...' to 'Groovy Calculator!'.
+Restyle the calculator with a 1960s psychedelic look.
 
 ## Motivation
-Operator request.
+The operator asked for the project to have 60s psychedelic styling.
 
 ## Observed Current Behavior
-The h1 with class 'title' in src/Calculator.jsx shows 'Groovy...'.
+The calculator uses its current theme, defined mainly in src/theme.css.
 
 ## Desired Behavior
-The h1 shows exactly 'Groovy Calculator!'. Styling and placement stay unchanged.
+The calculator looks 60s psychedelic: for example vivid saturated colors, swirling or gradient backgrounds, groovy rounded or retro display fonts, and bold contrasting button colors. Exact design choices are left to the implementer.
 
 ## Reproduction
-Open the app; the heading above the calculator reads 'Groovy...'.
+None
 
 ## Constraints
-Change the text only; keep the styling and centering as they are.
+Calculator behavior must not change. The heading must stay on one line. Existing unit and e2e tests must keep passing. Buttons and display must stay readable.
 
 ## Known Relevant Files
-- src/Calculator.jsx (line 47)
-- tests/e2e/theme.spec.js (lines 102, 107, 135 and 149 look up the heading by the name 'Groovy...')
+- src/theme.css
+- src/Calculator.jsx
+- index.html
 
 ## Out of Scope
-Any styling, layout or other behavior changes.
+Changes to calculator logic (src/engine.js, src/keymap.js), new features, new dependencies.
 
 ## Success Criteria
-- The h1 text is exactly 'Groovy Calculator!'.
-- The e2e tests that look up the heading are updated to the new text and pass.
-- No other behavior changes.
+- The UI has a clearly 60s psychedelic appearance.
+- All calculator functions behave as before.
+- Text and buttons remain legible.
+- Existing tests pass.

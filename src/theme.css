@@ -4,6 +4,10 @@
   --green: #568203;
   --brown: #3B2314;
   --cream: #FFF1D0;
+  --magenta: #FF1493;
+  --cyan: #00E5FF;
+  --violet: #7B2FF7;
+  --lime: #B6FF00;
   --font: Fredoka, "Baloo 2", Comfortaa, "Trebuchet MS", sans-serif;
 }
 
@@ -19,8 +23,8 @@ body {
   font-family: var(--font);
   color: var(--cream);
   background:
-    repeating-radial-gradient(circle at 50% 50%, var(--gold) 0, var(--orange) 40px, var(--green) 80px, var(--gold) 120px),
-    conic-gradient(from 210deg at 50% 50%, var(--orange), var(--green), var(--brown), var(--orange));
+    repeating-radial-gradient(circle at 50% 50%, var(--magenta) 0, var(--gold) 30px, var(--lime) 60px, var(--cyan) 90px, var(--violet) 120px, var(--magenta) 150px),
+    conic-gradient(from 210deg at 50% 50%, var(--violet), var(--magenta), var(--orange), var(--cyan), var(--violet));
   background-size: 200% 200%, 200% 200%;
   background-position: 0 0, 0 0;
   background-repeat: repeat, repeat;
@@ -35,6 +39,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   body { animation: none; background-position: 0 0, 0 0; }
+  .key { transition: none; }
 }
 
 .app {
@@ -58,15 +63,21 @@ body {
   text-shadow:
     -2px -2px 0 var(--brown), 2px -2px 0 var(--brown),
     -2px 2px 0 var(--brown), 2px 2px 0 var(--brown),
-    0 0 18px var(--orange);
+    0 0 18px var(--orange), 0 0 28px var(--magenta), 0 0 40px var(--cyan);
 }
 
 .calculator {
   width: min(92vw, 360px);
   padding: 16px;
   border-radius: 24px;
-  background: var(--brown);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  border: 5px solid transparent;
+  background-color: var(--brown);
+  background-image:
+    linear-gradient(var(--brown), var(--brown)),
+    conic-gradient(from 0deg, var(--magenta), var(--gold), var(--lime), var(--cyan), var(--violet), var(--magenta));
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 28px var(--magenta), 0 0 48px var(--cyan);
 }
 
 .display {
@@ -74,7 +85,9 @@ body {
   margin-bottom: 14px;
   padding: 12px 14px;
   border-radius: 14px;
-  background: var(--cream);
+  background-color: var(--cream);
+  background-image: linear-gradient(90deg, var(--cream), #E9FBFF);
+  box-shadow: inset 0 0 0 3px var(--violet), 0 0 12px var(--cyan);
   color: var(--brown);
   text-align: right;
   font-family: var(--font);
@@ -94,20 +107,36 @@ body {
 }
 
 .key {
-  border: 0;
+  border: 3px solid var(--brown);
   border-radius: 14px;
   padding: 14px 0;
   font-family: var(--font);
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.03em;
   cursor: pointer;
   color: var(--brown);
-  background: var(--cream);
+  background-color: var(--cream);
+  box-shadow: 0 0 0 2px var(--violet), 0 4px 0 2px var(--magenta);
+  transition: box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.key:hover {
+  filter: saturate(1.4);
+  box-shadow: 0 0 0 2px var(--cyan), 0 0 14px 3px var(--magenta);
+}
+
+.key:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--magenta), 0 0 16px 4px var(--lime);
 }
 
 .key:active { transform: translateY(1px); }
 
-.key-digit { background: var(--cream); color: var(--brown); }
-.key-op { background: var(--gold); color: var(--brown); }
-.key-equals { background: var(--green); color: var(--cream); }
-.key-clear { background: var(--orange); color: var(--cream); }
+.key:disabled { filter: grayscale(0.6); cursor: not-allowed; }
+
+.key-digit { background-color: var(--cream); background-image: linear-gradient(135deg, var(--cream), #D9F8FF); color: var(--brown); }
+.key-op { background-color: var(--gold); background-image: linear-gradient(135deg, var(--gold), #F4D03F); color: var(--brown); }
+.key-equals { background-color: var(--green); background-image: linear-gradient(135deg, var(--green), #7BB30A); color: #000; }
+.key-clear { background-color: var(--orange); background-image: linear-gradient(135deg, var(--orange), #E8731A); color: #000; }

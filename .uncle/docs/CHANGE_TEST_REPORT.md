@@ -4,28 +4,29 @@
 
 | Command | Status | Meaningful output | Requirements |
 |---|---|---|---|
-| baseline (npm test; npm run test:e2e) before edit | NOT RUN | node_modules absent in worktree; ran after npm ci. After text-only edit, T-10c failed (362 > 320), fixed via theme.css. | AC-3 |
-| npm run test:e2e | PASS | 26 passed (heading lookups with new name, T-10/T-10b/T-10c/T-10d) | AC-1, AC-2, AC-3 |
-| npm test | PASS | 18 passed | AC-3 |
-| regression tests | PASS | covered by the two commands above | AC-3 |
-| full test suite | DRIVER PENDING | driver runs it after this stage | AC-3 |
+| baseline (npm test; npx playwright test) before edit | NOT RUN | node_modules absent; the first post-edit run failed T-9, T-9d, T-10b because of a splice bug in my edit, fixed before the final run | AC-5 |
+| npx playwright test | PASS | 27 passed (includes T-9, T-9b, T-9d, T-9e, T-9f, T-10b-e) | AC-1, AC-2, AC-3, AC-5 |
+| npm test | PASS | 18 passed | AC-2, AC-5 |
+| regression tests | PASS | covered by the two commands above | AC-2 |
+| full test suite | DRIVER PENDING | driver runs it after this stage | AC-5 |
 | formatting | N/A | no formatter configured | None stated |
-| compiler or type checker | N/A | plain JS, none configured | None stated |
+| compiler or type checker | N/A | plain JS/CSS | None stated |
 | linting | N/A | no linter configured | None stated |
 | integration tests | PASS | e2e run above | AC-2 |
-| frontend build | NOT RUN | vite build not run; dev server used by e2e | None stated |
+| npm run build | PASS | vite build succeeded | AC-5 |
 | migration tests | N/A | no migration | None stated |
-| rollback test | N/A | git revert of edits | None stated |
-| performance checks | N/A | text change | None stated |
-| security checks | N/A | text change | None stated |
-| newly introduced warnings | N/A | none observed in tail output | None stated |
+| rollback test | N/A | git checkout src/theme.css | None stated |
+| performance checks | N/A | CSS only | None stated |
+| security checks | N/A | grep for url(/@import in theme.css returns 0 | None stated |
+| newly introduced warnings | N/A | none observed | None stated |
 | pre-existing failures | N/A | none known | None stated |
 
 ## Coverage gaps
 
-- No human visual check of wrapped heading at narrow widths
-- Heading wrap below ~360px asserted only by T-10c/T-10d overflow checks
+- No automated contrast test; ratios hand-calculated
+- Hover/focus-visible visuals and overall psychedelic appearance not observed by a person
+- Untested: reduced-motion transition rule
 
 ## Next action
 
-Driver runs full regression; reviewer inspects theme.css deviation.
+Driver runs the full regression block; a person may review a screenshot for AC-1 if desired.
