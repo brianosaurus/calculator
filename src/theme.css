@@ -1,0 +1,76 @@
+:root {
+  --orange: #CC5500;
+  --gold: #E1AD01;
+  --green: #568203;
+  --brown: #3B2314;
+  --cream: #FFF1D0;
+  --font: Fredoka, "Baloo 2", Comfortaa, "Trebuchet MS", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; min-height: 100%; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font);
+  color: var(--cream);
+  background:
+    radial-gradient(circle at 20% 15%, var(--gold) 0, transparent 45%),
+    conic-gradient(from 210deg at 70% 80%, var(--orange), var(--green), var(--brown), var(--orange));
+  background-attachment: fixed;
+}
+
+.calculator {
+  width: min(92vw, 360px);
+  padding: 16px;
+  border-radius: 24px;
+  background: var(--brown);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.display {
+  min-height: 4.2rem;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--cream);
+  color: var(--brown);
+  text-align: right;
+  font-family: var(--font);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.key {
+  border: 0;
+  border-radius: 14px;
+  padding: 14px 0;
+  font-family: var(--font);
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--brown);
+  background: var(--cream);
+}
+
+.key:active { transform: translateY(1px); }
+
+.key-digit { background: var(--cream); color: var(--brown); }
+.key-op { background: var(--gold); color: var(--brown); }
+.key-equals { background: var(--green); color: var(--cream); }
+.key-clear { background: var(--orange); color: var(--cream); }
