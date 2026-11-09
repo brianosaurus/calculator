@@ -1,47 +1,49 @@
 # Change Spec
 
-Omitted sections: Performance, Security, Migration, Prototype isolation (trivial text change)
+Omitted sections: Performance, Security, Migration, Prototype isolation (none apply)
 
 ## 1. Change type
-Feature (small text change).
+Text change.
 
-## 2-4. Problem / current / desired
-h1 reads "Groovy" (B-1); must read "Groovy..." with the three periods directly after the word, no space.
+## 2. Problem statement
+Heading should read 'Groovy Calculator!'.
 
-## 5. Observable behavior
+## 3. Current behavior
+B-1: 'Groovy...'.
+
+## 4. Desired behavior
+h1 text exactly 'Groovy Calculator!'; styling and placement unchanged.
+
+## 5. Observable behavior table
 | ID | Class | Trigger | Current behavior | Expected behavior | Verification |
 |---|---|---|---|---|---|
-| S-1 | MODIFY | Load page | h1 "Groovy" | h1 "Groovy..." | e2e heading name check |
-| S-2 | PRESERVE | Load page | h1 font, color, centering (B-2) | Unchanged | theme.spec.js T-10 |
-| S-3 | PRESERVE | Calculator use | Arithmetic/keyboard | Unchanged | npm test, e2e |
+| S-1 | MODIFY | Load app | 'Groovy...' | 'Groovy Calculator!' | e2e heading lookup by exact name |
+| S-2 | PRESERVE | Load app | Heading centered, styled (B-2) | Unchanged | T-10 e2e |
 
-## 6. Invariants
+## 6. Invariant table
 | ID | Status | Invariant | Scope | Enforcement point | Verification |
 |---|---|---|---|---|---|
-| I-1 | EXISTING | h1 visible, centered, styled | heading | className title | T-10 |
-| I-2 | EXISTING | Calculator behavior unchanged | app | engine/keymap | suites |
+| V-1 | EXISTING | h1 keeps class 'title' and styling | Calculator.jsx | className | e2e T-10 |
+
 No RELAXED or REMOVED invariants.
 
 ## 7. Compatibility
-None beyond tests referencing the heading name.
-
-## 8. Error behavior
-None.
+None beyond updated e2e lookups.
 
 ## 12. Rollback
-Revert the text and test edits.
+Revert the text edits.
 
 ## 14. Non-goals
-Any other visual or behavior change.
+Styling, layout, other behavior.
 
 ## 15. Assumptions
-Use literal ASCII "..." (three periods), not the Unicode ellipsis character.
+None unresolved.
 
 ## Acceptance criteria
 
 | ID | Criterion | Verification |
 |---|---|---|
-| AC-1 | The h1 above the calculator has text exactly "Groovy..." (three ASCII periods, no space). | Playwright getByRole('heading',{level:1,name:'Groovy...'}) visible |
-| AC-2 | Heading font, color, and centering are unchanged; no other files than Calculator.jsx and theme.spec.js change. | theme.spec.js T-10 passes; git diff review |
-| AC-3 | Existing tests referencing heading name 'Groovy' are updated to 'Groovy...' and the full suite passes. | npm test; npx playwright test |
+| AC-1 | The h1 text is exactly 'Groovy Calculator!'. | Playwright getByRole heading level 1 name 'Groovy Calculator!' exact |
+| AC-2 | e2e tests that look up the heading use the new text and pass. | npm run test:e2e |
+| AC-3 | No styling, centering or other behavior changes. | npm test and npm run test:e2e pass; diff limited to heading text |
 

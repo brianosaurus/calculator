@@ -1,55 +1,53 @@
 # Baseline Report
 
-Omitted sections: Existing failures (none documented); Reproduction (not a bug); API/schema contracts (none affected)
+Omitted sections: API contracts (none); Reproduction (text change, not a bug); Parallel groups (single suite each, not grouped)
 
 ## 1. Change-request summary
-See CHANGE_REQUEST.md: h1 "Groovy" becomes "Groovy..."; styling unchanged.
+See CHANGE_REQUEST.md: h1 text 'Groovy...' becomes 'Groovy Calculator!'.
 
 ## 2. Repository architecture
-Vite + React 19 SPA. Vitest unit tests (tests/engine.test.js, keymap.test.js), Playwright e2e (tests/e2e/*.spec.js), mutation scripts in tests/mutations.
+Vite + React 19 app. Vitest unit tests, Playwright e2e (tests/e2e).
 
 ## 3. Relevant code paths
-- src/Calculator.jsx:47 `<h1 className="title">Groovy</h1>`
-- tests/e2e/theme.spec.js:107, 135, 149 use heading name 'Groovy' (line 102 is test title)
+- src/Calculator.jsx:47 h1.title literal.
+- tests/e2e/theme.spec.js:102 (title), 107, 135, 149 (lookups by name 'Groovy...').
 
 ## 4. Current observable behavior
 | ID | Trigger | Current result | Evidence | Must preserve? |
 |---|---|---|---|---|
-| B-1 | Load page | h1 text "Groovy" | Calculator.jsx:47 | No (modified) |
-| B-2 | Load page | h1 styled via .title (font, color, centered) | Calculator.jsx:47; theme.spec.js:102-150 | Yes |
+| B-1 | Load app | h1 reads 'Groovy...' | Calculator.jsx:47 | No (changes) |
+| B-2 | Load app | h1 centered above calculator, themed styling | theme.spec.js T-10 | Yes |
 
 ## 5. Existing invariants
 | ID | Invariant | Current enforcement | Existing test | Confidence |
 |---|---|---|---|---|
-| I-1 | h1 is level-1 heading, visible, centered above calculator | className title | theme.spec.js T-10 | High |
-| I-2 | Calculator arithmetic/keyboard unchanged | engine/keymap | engine.test.js, keymap.test.js, e2e | High |
+| I-1 | h1 class 'title' keeps styling/centering | className unchanged | theme.spec.js:102-149 | High |
 
 ## 7. Existing automated-test coverage
-Playwright getByRole name matching is case-insensitive substring by default, so 'Groovy' would likely still match "Groovy..."; tests are still updated per the request. Commands run sequentially (e2e starts its own dev server via playwright config; shared port 5173), so no parallel groups.
+Vitest (npm test) and Playwright (npm run test:e2e); e2e assert heading by exact name.
 
 ## 9. Baseline test results
-Commands derived from package.json scripts. No pre-existing failures documented. Driver baseline is authoritative.
+Commands from package.json scripts. Not run in this stage; driver baseline is authority. No documented pre-existing failures.
 
 ## 12. Likely change surface
-Calculator.jsx:47; theme.spec.js assertions.
+Src/Calculator.jsx line 47; theme.spec.js lines 107, 135, 149 (and optionally title at 102).
 
 ## 13. Regression-sensitive components
-Theme e2e heading tests (centering, visibility).
+Playwright theme/heading tests.
 
-## 14. Out of scope
-All other visuals/behavior.
+## 14. Outside the change
+Styling, layout, other behavior.
 
 ## 15. Unknowns and assumptions
-Assume playwright.config.js launches the server for e2e (not read). No `Seeded from` link or issue number in the request metadata.
+Assume Vitest tests do not reference heading text (grep of tests found only theme.spec.js).
 
-## 16. Initial risk
+## 16. Initial risk assessment
 Low.
 
 ## Exact build and test commands executed
 
 ```sh
 npm test
-npm run build
-npx playwright test
+npm run test:e2e
 ```
 

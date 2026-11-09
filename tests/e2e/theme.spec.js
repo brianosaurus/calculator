@@ -104,7 +104,7 @@ test('T-10 heading Groovy visible and centered above calculator (AC-1, AC-2)', a
     if (vp) await page.setViewportSize(vp);
     await page.goto('/');
     await expect(page.getByTestId('display')).toHaveText('0');
-    const h = page.getByRole('heading', { level: 1, name: 'Groovy...', exact: true });
+    const h = page.getByRole('heading', { level: 1, name: 'Groovy Calculator!', exact: true });
     await expect(h).toBeVisible();
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     const hb = await h.boundingBox();
@@ -132,7 +132,7 @@ test('T-10b title styling (AC-3)', async ({ page }) => {
 test('T-10c no horizontal overflow at 320px (AC-4)', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Groovy...', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Groovy Calculator!', exact: true })).toBeVisible();
   const r = await page.evaluate(() => ({
     sw: document.documentElement.scrollWidth,
     cw: document.documentElement.clientWidth,
@@ -146,7 +146,7 @@ test('T-10c no horizontal overflow at 320px (AC-4)', async ({ page }) => {
 test('T-10d short viewport scrolls, nothing clipped (AC-4)', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 300 });
   await page.goto('/');
-  const h = page.getByRole('heading', { name: 'Groovy...', exact: true });
+  const h = page.getByRole('heading', { name: 'Groovy Calculator!', exact: true });
   await expect(h).toBeVisible();
   expect((await h.boundingBox()).y).toBeGreaterThanOrEqual(0);
   const calc = page.locator('.calculator');
@@ -171,4 +171,23 @@ test('T-9f loop is seamless: end keyframe shifts each layer by whole tiles', asy
     expect(tiles, `layer ${i}`).toBeGreaterThanOrEqual(1);
     expect(Math.abs(tiles - Math.round(tiles)), `layer ${i}`).toBeLessThan(1e-6);
   });
+});
+
+test('T-10e heading stays on one line and inside the calculator width (MC-200)', async ({ page }) => {
+  for (const vp of [{ width: 1280, height: 800 }, { width: 375, height: 667 }, { width: 320, height: 640 }]) {
+    await page.setViewportSize(vp);
+    await page.goto('/');
+    const h = page.getByRole('heading', { level: 1, name: 'Groovy Calculator!', exact: true });
+    await expect(h).toBeVisible();
+    const r = await h.evaluate((el) => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const box = el.getBoundingClientRect();
+      return { lines: range.getClientRects().length, overflow: el.scrollWidth > el.clientWidth, left: box.left, right: box.right };
+    });
+    expect(r.lines).toBe(1);
+    expect(r.overflow).toBe(false);
+    expect(r.left).toBeGreaterThanOrEqual(0);
+    expect(r.right).toBeLessThanOrEqual(vp.width);
+  }
 });

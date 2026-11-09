@@ -1,58 +1,56 @@
 # Change Plan
 
-Omitted sections: Schema, Concurrency, Migration, Feature flag, Observability, Data/state flow (text-only change)
+Omitted sections: data-flow, state, API, schema, concurrency, migration, feature flag, observability (text-only change)
 
-## 1-3. Approach
-Edit the literal h1 text and update test assertions. Alternative: CSS ::after pseudo-element; rejected because the accessible name would not include the periods and it is needless indirection. Literal text is simplest and testable.
+Issue 0
+
+## 1. Selected approach
+Edit the string literal in Calculator.jsx and update e2e name lookups.
+
+## 2. Alternatives
+None meaningful.
+
+## 3. Why preferred
+Minimal; matches request.
 
 ## 4. Components to modify
-See change-impact table.
+See table.
 
 ## 5. Not to modify
-CSS, engine, keymap, other specs, config.
-
-## 10. Compatibility
-No API change. Decision D-1: use ASCII "...".
-
-## 12. Error and recovery
-None.
-
-## 14. Rollback plan
-Revert the commit/edits to the two files.
-
-## 16-17. Test strategy
-Update theme.spec.js name assertions to 'Groovy...'. Regression: npm test, npx playwright test (baseline commands). No bug-fix regression test applies.
-
-## 18. Manual verification
-Load page; confirm heading shows "Groovy..." with same look.
-
-## Restrictions
-| ID | Source | Location | Reqs | Property | Mechanism | Phase |
-|---|---|---|---|---|---|---|
-| R-1 | USER | CHANGE_REQUEST Constraints | AC-2 | Keep font/color/centering | Change only text node | CODING |
-| R-2 | USER | CHANGE_REQUEST Constraints | AC-3 | Update tests matching 'Groovy' | Edit theme.spec.js lines 107,135,149 | CODING |
+CSS, other source, other tests.
 
 ## Change-impact table
+
 | Component | Planned change | Reason | Regression risk | Test coverage |
 |---|---|---|---|---|
-| src/Calculator.jsx:47 | Text "Groovy" -> "Groovy..." | AC-1 | Low | theme.spec.js |
-| tests/e2e/theme.spec.js | Heading name 'Groovy' -> 'Groovy...' (and title at 102 optionally) | AC-3 | Low | itself |
+| src/Calculator.jsx:47 | Text to 'Groovy Calculator!' | AC-1 | Low | e2e T-10 |
+| tests/e2e/theme.spec.js | Lines 107, 135, 149 lookups to new name; title at 102 reworded optionally | AC-2 | Low | npm run test:e2e |
 
 ## Traceability
+
 | Requirement | Behavior | Invariant | Component | Automated test | Manual check |
 |---|---|---|---|---|---|
-| AC-1 | S-1 | I-1 | Calculator.jsx | theme.spec.js | View heading |
-| AC-2 | S-2 | I-1 | Calculator.jsx | T-10 | View look |
-| AC-3 | S-3 | I-2 | theme.spec.js | full suites | None |
+| AC-1 | S-1 | V-1 | Calculator.jsx | theme.spec.js | View heading |
+| AC-2 | S-1 | V-1 | theme.spec.js | npm run test:e2e | None |
+| AC-3 | S-2 | V-1 | none | npm test, e2e | None |
+
+The e2e lookups are expected to fail before the change and pass after.
+
+## 16-18. Test strategy
+Run baseline commands (npm test; npm run test:e2e). Manual check: view heading in browser.
 
 ## Implementation sequence
-1. Change h1 text at src/Calculator.jsx:47 to "Groovy...". Owns: `src/Calculator.jsx`
-2. Update heading-name assertions in tests/e2e/theme.spec.js to 'Groovy...'. Owns: `tests/e2e/theme.spec.js`
 
-Steps are independent (no shared files); step 2 expectations match step 1's text.
+1. Update heading literal at line 47. Owns: `src/Calculator.jsx`
+2. Update e2e heading lookups at lines 107, 135, 149. Owns: `tests/e2e/theme.spec.js`
 
-## Scope cuts
-None needed.
+Steps are independent.
 
-## Risks
-Low. Live e2e run requires Playwright browsers installed (LIVE_VERIFICATION only; does not block coding).
+## 14. Rollback plan
+Revert both edits via git.
+
+## 21. Scope cuts
+None.
+
+## 22. Risks
+Low; the Issue number is unknown in the request, so the identity line is 0 only if absent.

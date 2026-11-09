@@ -1,32 +1,34 @@
-# Change Request
+# Change Request: Heading text
 
 ## Change Type
-Feature (small text change)
+Text change
 
 ## Summary
-Add '...' (three periods) immediately after the word "Groovy" in the heading above the calculator, so it reads "Groovy...".
+Change the calculator heading from 'Groovy...' to 'Groovy Calculator!'.
 
 ## Motivation
-Requested by the operator.
+Operator request.
 
 ## Observed Current Behavior
-The h1 heading above the calculator reads "Groovy".
+The h1 with class 'title' in src/Calculator.jsx shows 'Groovy...'.
 
 ## Desired Behavior
-The heading reads "Groovy..." with the ellipsis directly after the word, keeping the existing styling.
+The h1 shows exactly 'Groovy Calculator!'. Styling and placement stay unchanged.
 
 ## Reproduction
-Open the calculator page and look at the heading above the calculator.
+Open the app; the heading above the calculator reads 'Groovy...'.
 
 ## Constraints
-Keep existing font, color and centering. Update existing tests that match the heading name "Groovy" so they still pass.
+Change the text only; keep the styling and centering as they are.
 
 ## Known Relevant Files
-- src/Calculator.jsx (line 47, h1 className=title)
-- tests/e2e/theme.spec.js (heading name 'Groovy' assertions)
+- src/Calculator.jsx (line 47)
+- tests/e2e/theme.spec.js (lines 102, 107, 135 and 149 look up the heading by the name 'Groovy...')
 
 ## Out of Scope
-Any other visual or behavior changes.
+Any styling, layout or other behavior changes.
 
 ## Success Criteria
-The heading displays "Groovy..." and the test suite passes.
+- The h1 text is exactly 'Groovy Calculator!'.
+- The e2e tests that look up the heading are updated to the new text and pass.
+- No other behavior changes.

@@ -2,13 +2,13 @@
 
 ## Coverage
 
-### MC-102
+### MC-101
 - Required for acceptance: YES
 - Exclusive resources: none
 - Depends on: none
-- Exact action: Look at the heading on the page and judge its font, color and centering. Compare with the earlier "Groovy" look described in the baseline: styled font and color, centered above the calculator.
-- Expected result: The heading keeps the same font, color and horizontal centering above the calculator. Only the three trailing periods are new.
-- Evidence to capture: Screenshot of the heading region and a short note on the font, color and centering.
+- Exact action: Open the running app in a browser and look at the page heading above the calculator.
+- Expected result: The single level-1 heading reads exactly 'Groovy Calculator!' with no trailing '...' and the old text 'Groovy...' appears nowhere on the page.
+- Evidence to capture: Screenshot of the loaded page showing the heading, plus the heading's text as read from the page.
 - Actual result: 
 - Status: NOT RUN
 
@@ -16,21 +16,31 @@
 - Required for acceptance: YES
 - Exclusive resources: none
 - Depends on: none
-- Exact action: Use the calculator by clicking buttons to compute 7 x 6, then type 12+3 and press Enter on the keyboard.
-- Expected result: The results are 42 and 15, and the heading still shows "Groovy..." unchanged.
-- Evidence to capture: Screenshot of the display showing each result.
+- Exact action: Resize the browser to a narrow mobile width (about 375px) and view the heading and calculator.
+- Expected result: The heading 'Groovy Calculator!' stays fully visible and centered, does not clip or cause horizontal scrolling, and the calculator layout is unchanged.
+- Evidence to capture: Screenshot at narrow width showing the heading and calculator.
 - Actual result: 
 - Status: NOT RUN
 
-## invariants
+### MC-104
+- Required for acceptance: YES
+- Exclusive resources: none
+- Depends on: none
+- Exact action: Use the calculator: enter 7 + 5 and press equals, then press clear; also switch the theme if a theme control exists.
+- Expected result: The calculator computes 12, clears correctly, and any theme switch works, with the heading text remaining 'Groovy Calculator!' and styled consistently throughout.
+- Evidence to capture: Screenshot after the calculation showing the result 12 and the heading, plus a note on theme behavior.
+- Actual result: 
+- Status: NOT RUN
+
+## Invariants
 
 ### MC-200
 - Required for acceptance: YES
 - Exclusive resources: none
 - Depends on: none
-- Exact action: Open the running application in a browser and look at the heading above the calculator; compare its font, color, size and horizontal centering with the previously known look (same decorative font, same color, centered over the calculator).
-- Expected result: The heading reads "Groovy..." with the same font, color and centering as before; only the three trailing periods are new, with no space before them, and the heading remains a visible level-1 heading above the calculator.
-- Evidence to capture: Screenshot of the page header showing the heading text and styling.
+- Exact action: Open the running app in a browser at desktop width and look at the heading above the calculator, comparing its font, color, size and horizontal centering against the calculator body.
+- Expected result: The heading reads exactly 'Groovy Calculator!', is horizontally centered above the calculator, and keeps the same themed font and color styling as before the text change, with no wrapping, clipping or overflow.
+- Evidence to capture: Screenshot of the full page showing the heading and calculator, plus a note of the visible heading text.
 - Actual result: 
 - Status: NOT RUN
 
@@ -38,9 +48,19 @@
 - Required for acceptance: YES
 - Exclusive resources: none
 - Depends on: none
-- Exact action: In the running application, click the calculator keys to compute 7 + 5 = and then press keyboard keys to compute 9 * 3 Enter, then clear.
-- Expected result: The display shows 12 and then 27, and clearing resets it; arithmetic and keyboard input behave exactly as before the heading change.
-- Evidence to capture: Screenshot or written note of the display values after each calculation and after clear.
+- Exact action: Narrow the browser viewport to a phone width (about 375px) and reload, then view the heading and calculator layout.
+- Expected result: The heading 'Groovy Calculator!' remains centered and fully visible above the calculator without horizontal scrolling or layout breakage.
+- Evidence to capture: Screenshot at 375px width showing the heading and calculator.
+- Actual result: 
+- Status: NOT RUN
+
+### MC-202
+- Required for acceptance: YES
+- Exclusive resources: none
+- Depends on: none
+- Exact action: In the app, perform a few calculations by clicking buttons (for example 12 + 7 =, then clear) and toggle any theme control if present.
+- Expected result: Calculator arithmetic, clear and theme behavior work as before, and the heading text stays 'Groovy Calculator!' throughout.
+- Evidence to capture: Screenshot of the displayed result (19) and the heading after the interactions, with notes on any anomalies.
 - Actual result: 
 - Status: NOT RUN
 
@@ -50,8 +70,8 @@
 - Required for acceptance: YES
 - Exclusive resources: none
 - Depends on: none
-- Exact action: In the loaded app, use the calculator with mouse and keyboard: enter 12 + 7 = and then 9 x 6 =, and clear.
-- Expected result: Results are 19 and 54, keyboard input works, and clear resets the display. The heading change does not affect the layout or behavior of the calculator.
-- Evidence to capture: Screenshot of the display after each calculation and a note of the results.
+- Exact action: Use the calculator: enter 7 + 5 = and then clear; try a multi-digit and decimal operation such as 1.5 * 4 =.
+- Expected result: Results are 12 and 6, and clear resets the display; calculator behavior is unaffected by the heading change.
+- Evidence to capture: Screenshot or notes of display values after each operation.
 - Actual result: 
 - Status: NOT RUN
