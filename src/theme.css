@@ -19,9 +19,22 @@ body {
   font-family: var(--font);
   color: var(--cream);
   background:
-    radial-gradient(circle at 20% 15%, var(--gold) 0, transparent 45%),
-    conic-gradient(from 210deg at 70% 80%, var(--orange), var(--green), var(--brown), var(--orange));
+    repeating-radial-gradient(circle at 50% 50%, var(--gold) 0, var(--orange) 40px, var(--green) 80px, var(--gold) 120px),
+    conic-gradient(from 210deg at 50% 50%, var(--orange), var(--green), var(--brown), var(--orange));
+  background-size: 200% 200%, 200% 200%;
+  background-position: 0 0, 0 0;
+  background-repeat: repeat, repeat;
   background-attachment: fixed;
+  animation: groovy 20s linear infinite;
+}
+
+@keyframes groovy {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 200% 200%, -200% -200%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none; background-position: 0 0, 0 0; }
 }
 
 .calculator {

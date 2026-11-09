@@ -49,3 +49,68 @@ test('T-9 theme computed styles', async ({ page }) => {
   expect(external).toEqual([]);
   expect(errors).toEqual([]);
 });
+
+const bodyStyle = (page) =>
+  page.evaluate(() => {
+    const s = getComputedStyle(document.body);
+    return { name: s.animationName, pos: s.backgroundPosition };
+  });
+const isBase = (pos) => pos.split(',').every((p) => /^\s*0(px|%)?\s+0(px|%)?\s*$/.test(p));
+
+test('T-9b animated background changes over time', async ({ browser }) => {
+  const ctx = await browser.newContext({ reducedMotion: 'no-preference' });
+  const page = await ctx.newPage();
+  await page.goto('/');
+  await expect.poll(async () => (await bodyStyle(page)).name).not.toBe('none');
+  expect(await page.evaluate(() => getComputedStyle(document.body).animationIterationCount)).toBe('infinite');
+  const a = await bodyStyle(page);
+  await page.waitForTimeout(500);
+  const b = await bodyStyle(page);
+  expect(a.pos).not.toBe(b.pos);
+  await ctx.close();
+});
+
+test('T-9c reduced motion is static at base position and applies live', async ({ browser }) => {
+  const ctx = await browser.newContext({ reducedMotion: 'reduce' });
+  const page = await ctx.newPage();
+  await page.goto('/');
+  const a = await bodyStyle(page);
+  expect(a.name).toBe('none');
+  expect(isBase(a.pos)).toBe(true);
+  await page.waitForTimeout(500);
+  const b = await bodyStyle(page);
+  expect(b.pos).toBe(a.pos);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await expect.poll(async () => (await bodyStyle(page)).name).not.toBe('none');
+  await ctx.close();
+});
+
+test('T-9d calculator background is opaque brown', async ({ page }) => {
+  await page.goto('/');
+  const bg = await page.evaluate(() => getComputedStyle(document.querySelector('.calculator')).backgroundColor);
+  expect(bg).toBe(rgb('#3B2314'));
+});
+
+test('T-9e theme.css has no url( or @import', async () => {
+  const fs = await import('node:fs');
+  const css = fs.readFileSync(new URL('../../src/theme.css', import.meta.url), 'utf8');
+  expect(css).not.toMatch(/url\(|@import/);
+});
+
+test('T-9f loop is seamless: end keyframe shifts each layer by whole tiles', async ({ page }) => {
+  await page.goto('/');
+  const r = await page.evaluate(() => {
+    const kf = [...document.styleSheets].flatMap((s) => [...s.cssRules]).find((x) => x.name === 'groovy');
+    const end = [...kf.cssRules].find((x) => x.keyText === '100%').style.backgroundPosition;
+    return { end, size: getComputedStyle(document.body).backgroundSize };
+  });
+  const sizes = r.size.split(',').map((s) => parseFloat(s));
+  const pos = r.end.split(',').map((s) => parseFloat(s.trim().split(/\s+/)[0]));
+  expect(pos.length).toBe(sizes.length);
+  pos.forEach((p, i) => {
+    // percentage position p moves the tile by p*(1 - s/100) viewport widths; tile is s/100 wide
+    const tiles = Math.abs((p / 100) * (sizes[i] / 100 - 1)) / (sizes[i] / 100);
+    expect(tiles, `layer ${i}`).toBeGreaterThanOrEqual(1);
+    expect(Math.abs(tiles - Math.round(tiles)), `layer ${i}`).toBeLessThan(1e-6);
+  });
+});
