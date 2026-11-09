@@ -172,3 +172,22 @@ test('T-9f loop is seamless: end keyframe shifts each layer by whole tiles', asy
     expect(Math.abs(tiles - Math.round(tiles)), `layer ${i}`).toBeLessThan(1e-6);
   });
 });
+
+test('T-10e heading stays on one line and inside the calculator width (MC-200)', async ({ page }) => {
+  for (const vp of [{ width: 1280, height: 800 }, { width: 375, height: 667 }, { width: 320, height: 640 }]) {
+    await page.setViewportSize(vp);
+    await page.goto('/');
+    const h = page.getByRole('heading', { level: 1, name: 'Groovy Calculator!', exact: true });
+    await expect(h).toBeVisible();
+    const r = await h.evaluate((el) => {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const box = el.getBoundingClientRect();
+      return { lines: range.getClientRects().length, overflow: el.scrollWidth > el.clientWidth, left: box.left, right: box.right };
+    });
+    expect(r.lines).toBe(1);
+    expect(r.overflow).toBe(false);
+    expect(r.left).toBeGreaterThanOrEqual(0);
+    expect(r.right).toBeLessThanOrEqual(vp.width);
+  }
+});
