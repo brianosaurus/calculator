@@ -1,57 +1,47 @@
-# Change spec
+# Change Spec
 
-Omitted sections: Migration, Performance, Security, Prototype isolation (not applicable to a static heading)
+Omitted sections: Performance, Security, Migration, Prototype isolation (trivial text change)
 
 ## 1. Change type
-Feature (visual enhancement).
+Feature (small text change).
 
-## 2. Problem statement
-The groovy 70s page has no title; the operator wants a matching one.
+## 2-4. Problem / current / desired
+h1 reads "Groovy" (B-1); must read "Groovy..." with the three periods directly after the word, no space.
 
-## 3. Current behavior
-See baseline B1.
-
-## 4. Desired behavior
-The word "Groovy" appears centered above the calculator, in a bold rounded retro font and warm 70s colors, legible on the moving background.
-
-## 5. Observable behavior table
+## 5. Observable behavior
 | ID | Class | Trigger | Current behavior | Expected behavior | Verification |
 |---|---|---|---|---|---|
-| S1 | ADD | Open app | No title | Visible h1 "Groovy" above the calculator, horizontally centered over it | AC-1, AC-2 |
-| S2 | ADD | View title | n/a | Font from theme --font, bold; warm palette color with a dark outline/shadow for legibility | AC-3 |
-| S3 | PRESERVE | Use calculator (B2, B3) | Works | Unchanged | AC-4 |
-| S4 | PRESERVE | Open app (B1) | Animated background, centered calculator | Unchanged background; calculator still centered as a group with the title | AC-4 |
+| S-1 | MODIFY | Load page | h1 "Groovy" | h1 "Groovy..." | e2e heading name check |
+| S-2 | PRESERVE | Load page | h1 font, color, centering (B-2) | Unchanged | theme.spec.js T-10 |
+| S-3 | PRESERVE | Calculator use | Arithmetic/keyboard | Unchanged | npm test, e2e |
 
-## 6. Invariant table
+## 6. Invariants
 | ID | Status | Invariant | Scope | Enforcement point | Verification |
 |---|---|---|---|---|---|
-| V1 | EXISTING | Calculator logic unchanged (I1) | engine, keymap | existing tests | AC-4 |
-| V2 | EXISTING | DOM hooks display/data-key preserved (I3) | Calculator.jsx | e2e | AC-4 |
-| V3 | NEW | Title text is exactly "Groovy" and sits above `.calculator` | UI | theme.spec.js | AC-1, AC-2 |
-
+| I-1 | EXISTING | h1 visible, centered, styled | heading | className title | T-10 |
+| I-2 | EXISTING | Calculator behavior unchanged | app | engine/keymap | suites |
 No RELAXED or REMOVED invariants.
 
 ## 7. Compatibility
-No API change. Narrow viewports (min width 320px) must not overflow horizontally.
+None beyond tests referencing the heading name.
 
 ## 8. Error behavior
-If the preferred font is unavailable the existing fallback stack applies.
+None.
 
 ## 12. Rollback
-Revert the heading markup and its CSS.
+Revert the text and test edits.
 
 ## 14. Non-goals
-Calculator logic, buttons, background design.
+Any other visual or behavior change.
 
 ## 15. Assumptions
-A text-shadow or outline in --brown gives sufficient contrast; no new font asset is added.
+Use literal ASCII "..." (three periods), not the Unicode ellipsis character.
 
 ## Acceptance criteria
 
 | ID | Criterion | Verification |
 |---|---|---|
-| AC-1 | A visible heading with the text "Groovy" is rendered in the page. | Playwright test asserts getByRole('heading', {name:'Groovy'}) is visible. |
-| AC-2 | The heading is above the calculator and horizontally centered over it. | Playwright test compares bounding boxes: heading bottom <= calculator top and center x within 2px of calculator center x. |
-| AC-3 | The heading uses the theme font stack, bold weight, and a warm palette color (gold/cream/orange) with a dark text-shadow or outline for legibility. | Playwright test checks computed font-weight >= 600, a non-empty text-shadow, and that color is not brown; manual visual check against the animated background. |
-| AC-4 | Existing calculator behavior and tests are unaffected, and the page has no horizontal overflow at 320px width. | npx vitest run, npx playwright test, npm run build pass; a 320px viewport check asserts scrollWidth <= clientWidth. |
+| AC-1 | The h1 above the calculator has text exactly "Groovy..." (three ASCII periods, no space). | Playwright getByRole('heading',{level:1,name:'Groovy...'}) visible |
+| AC-2 | Heading font, color, and centering are unchanged; no other files than Calculator.jsx and theme.spec.js change. | theme.spec.js T-10 passes; git diff review |
+| AC-3 | Existing tests referencing heading name 'Groovy' are updated to 'Groovy...' and the full suite passes. | npm test; npx playwright test |
 

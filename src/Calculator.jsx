@@ -44,7 +44,7 @@ export default function Calculator() {
 
   return (
     <div className="app">
-      <h1 className="title">Groovy</h1>
+      <h1 className="title">Groovy...</h1>
       <div className="calculator">
         <div
           className="display"
