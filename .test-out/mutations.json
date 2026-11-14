@@ -7,6 +7,12 @@
   "controlsFailed": 0,
   "results": [
     {
+      "id": "DI-1",
+      "file": "src/engine.js",
+      "status": "CAUGHT",
+      "detail": ""
+    },
+    {
       "id": "DI-2",
       "file": "src/engine.js",
       "status": "SURVIVED",
@@ -14,12 +20,6 @@
     },
     {
       "id": "DI-3",
-      "file": "src/engine.js",
-      "status": "CAUGHT",
-      "detail": ""
-    },
-    {
-      "id": "DI-1",
       "file": "src/engine.js",
       "status": "CAUGHT",
       "detail": ""
@@ -37,8 +37,8 @@
       "detail": ""
     },
     {
-      "id": "DI-7",
-      "file": "src/theme.css",
+      "id": "DI-6",
+      "file": "src/Calculator.jsx",
       "status": "CAUGHT",
       "detail": ""
     },
@@ -49,8 +49,8 @@
       "detail": ""
     },
     {
-      "id": "DI-6",
-      "file": "src/Calculator.jsx",
+      "id": "DI-7",
+      "file": "src/theme.css",
       "status": "CAUGHT",
       "detail": ""
     },
