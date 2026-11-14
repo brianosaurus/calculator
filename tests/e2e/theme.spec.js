@@ -111,6 +111,12 @@ test('T-10 heading Groovy visible and centered above calculator (AC-1, AC-2)', a
     const cb = await page.locator('.calculator').boundingBox();
     expect(Math.abs(centerX(hb) - centerX(cb))).toBeLessThanOrEqual(2);
     expect(hb.y + hb.height).toBeLessThanOrEqual(cb.y + 1);
+    const lineHeight = await h.evaluate((el) => {
+      const s = getComputedStyle(el);
+      const lh = parseFloat(s.lineHeight);
+      return Number.isNaN(lh) ? parseFloat(s.fontSize) * 1.2 : lh;
+    });
+    expect(hb.height).toBeLessThanOrEqual(lineHeight * 1.2);
   }
 });
 
